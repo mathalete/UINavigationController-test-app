@@ -8,10 +8,12 @@
 import SwiftUI
 
 @main
-struct UINavigationControllerApp: App {
+struct NavigationApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabBarController()
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }
+
