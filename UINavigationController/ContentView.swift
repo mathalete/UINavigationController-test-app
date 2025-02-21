@@ -11,6 +11,8 @@ import UIKit
 struct HomeView: View {
     @State private var isReduceTransparency: Bool = UIAccessibility.isReduceTransparencyEnabled
     @State private var isHighContrast: Bool = UIAccessibility.isDarkerSystemColorsEnabled
+    @State private var isBoldText: Bool = UIAccessibility.isBoldTextEnabled
+
 
     var body: some View {
         NavigationView {
@@ -30,6 +32,11 @@ struct HomeView: View {
                         title: "Increase Contrast",
                         value: isHighContrast ? "Enabled ✅" : "Disabled ❌"
                     )
+                    
+                    featureStatus(
+                                           title: "Bold Text",
+                                           value: isBoldText ? "Enabled ✅" : "Disabled ❌"
+                                       )
 
                     featureDescription(
                         title: "Reduce transparency",
@@ -39,6 +46,11 @@ struct HomeView: View {
                     featureDescription(
                         title: "Increase contrast",
                         description: "The tab bar listens for the 'Increase Contrast' setting and adjusts the SF Symbol fill colours to be darker if the setting is enabled. This ensures that icons and selected states remain highly visible under different contrast preferences."
+                    )
+                    
+                    featureDescription(
+                        title: "Bold text",
+                        description: "The tab bar listens for the 'Bold text' setting and adjusts the SF Symbol to be embodle if enabled."
                     )
 
                     
@@ -63,17 +75,21 @@ struct HomeView: View {
     }
     
     // MARK: - Observe Accessibility Changes
-    private func setupAccessibilityObserver() {
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.addObserver(forName: UIAccessibility.reduceTransparencyStatusDidChangeNotification, object: nil, queue: .main) { _ in
-            self.isReduceTransparency = UIAccessibility.isReduceTransparencyEnabled
-        }
+        private func setupAccessibilityObserver() {
+            let notificationCenter = NotificationCenter.default
 
-        notificationCenter.addObserver(forName: UIAccessibility.darkerSystemColorsStatusDidChangeNotification, object: nil, queue: .main) { _ in
-            self.isHighContrast = UIAccessibility.isDarkerSystemColorsEnabled
+            notificationCenter.addObserver(forName: UIAccessibility.reduceTransparencyStatusDidChangeNotification, object: nil, queue: .main) { _ in
+                self.isReduceTransparency = UIAccessibility.isReduceTransparencyEnabled
+            }
+
+            notificationCenter.addObserver(forName: UIAccessibility.darkerSystemColorsStatusDidChangeNotification, object: nil, queue: .main) { _ in
+                self.isHighContrast = UIAccessibility.isDarkerSystemColorsEnabled
+            }
+
+            notificationCenter.addObserver(forName: UIAccessibility.boldTextStatusDidChangeNotification, object: nil, queue: .main) { _ in
+                self.isBoldText = UIAccessibility.isBoldTextEnabled
+            }
         }
-    }
     
     // MARK: - Feature Description View
     private func featureDescription(title: String, description: String) -> some View {
@@ -181,13 +197,13 @@ struct TabBarController: UIViewControllerRepresentable {
         let musicView = UIHostingController(rootView: MusicView())
         let podcastsView = UIHostingController(rootView: PodcastsView())
 
-        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house.fill"), tag: 0)
-        musicView.tabBarItem = UITabBarItem(title: "Music", image: UIImage(systemName: "music.note.list"), tag: 1)
-        podcastsView.tabBarItem = UITabBarItem(title: "Podcasts", image: UIImage(systemName: "mic.fill"), tag: 2)
+        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
+        musicView.tabBarItem = UITabBarItem(title: "Music", image: UIImage(systemName: "music.note.list"), selectedImage: UIImage(systemName: "music.note.list"))
+        podcastsView.tabBarItem = UITabBarItem(title: "Podcasts", image: UIImage(systemName: "mic"), selectedImage: UIImage(systemName: "mic.fill"))
 
         tabBarController.viewControllers = [homeView, musicView, podcastsView]
 
-        // Apply Default Stronger Transparency & Reduce Transparency Handling
+        // Apply custom tab bar styling
         updateTabBarAppearance(tabBarController)
 
         return tabBarController
@@ -198,13 +214,22 @@ struct TabBarController: UIViewControllerRepresentable {
     }
 
     private func updateTabBarAppearance(_ tabBarController: UITabBarController) {
+        let isDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
+
+        // Define colors for selected and unselected icons
+        let selectedColor = isDarkMode ? UIColor(red: 1.0, green: 0.48, blue: 0.13, alpha: 1.0) : UIColor(red: 0.82, green: 0.28, blue: 0.07, alpha: 1.0) // #FF7B22 (Dark) / #D24712 (Light)
+        let unselectedColor = UIColor.systemGray // Equivalent to #999999
+
+        // Apply colors to tab bar icons
+        tabBarController.tabBar.tintColor = selectedColor // Selected tab icon color
+        tabBarController.tabBar.unselectedItemTintColor = unselectedColor // Unselected icon color
+
+        // Ensure correct background handling
         let isReduceTransparency = UIAccessibility.isReduceTransparencyEnabled
-        
         if isReduceTransparency {
-            // Solid background when Reduce Transparency is ON
             tabBarController.tabBar.backgroundColor = UIColor.white
+            tabBarController.tabBar.isTranslucent = false
         } else {
-            // More obvious transparency effect
             tabBarController.tabBar.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.5)
             tabBarController.tabBar.isTranslucent = true
         }
