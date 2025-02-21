@@ -5,6 +5,7 @@ This is a SwiftUI + UIKit demo app that tests accessibility modifications to a `
 ## 📌 Features
 - **Reduce transparency**: Automatically adjusts transparency based on the `Reduce Transparency` setting.
 - **Increased Contrast**: Updates icon and color visibility when `Increase Contrast` is enabled.
+- **Bold text**: Updates text and icons to be embolded when `Bold Text` is enabled.
 - **Live Accessibility Status**: Displays the current state of accessibility settings on the home screen.
 - **Dynamic UI Updates**: Uses `NotificationCenter` to detect and respond to setting changes in real time.
 
@@ -14,6 +15,7 @@ This is a SwiftUI + UIKit demo app that tests accessibility modifications to a `
 | **Reduce Transparency (OFF)** | Tab bar is semi-transparent (`alpha 0.5`). |
 | **Reduce Transparency (ON)**  | Tab bar switches to **solid white** for better readability. |
 | **Increase Contrast (ON)**  | Ensures icons and UI elements remain visible and well-defined. |
+| **Bold text (ON)**  | Ensures icons and UI elements are embolded when this setting is applied. |
 
 ## 🚀 How to Test
 1. **Run the app in Xcode (`Command + R`)**.
