@@ -18,39 +18,39 @@ struct HomeView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("UITabController test app")
+                    Text("UITabController tests")
                         .font(.largeTitle)
                         .padding(.bottom, 10)
+
                     
-                    // Live Accessibility Status
                     featureStatus(
-                        title: "Reduce Transparency",
+                        title: "Reduce Transparency is",
                         value: isReduceTransparency ? "Enabled ✅" : "Disabled ❌"
                     )
-                    
-                    featureStatus(
-                        title: "Increase Contrast",
-                        value: isHighContrast ? "Enabled ✅" : "Disabled ❌"
-                    )
-                    
-                    featureStatus(
-                                           title: "Bold Text",
-                                           value: isBoldText ? "Enabled ✅" : "Disabled ❌"
-                                       )
 
                     featureDescription(
                         title: "Reduce transparency",
-                        description: "The UITabBarController dynamically adjusts its background based on the user's accessibility settings. If 'Reduce Transparency' is enabled, the tab bar switches to a solid background for better readability. Otherwise, it maintains a subtle transparency effect."
+                        description: "By default, when Reduce Transparency is enabled in iOS Accessibility settings, iOS automatically reduces transparent or blurred UI elements to enhance readability. In this implementation,  a solid background color is defined for the tab bar - white in Light Mode and black in Dark Mode - when Reduce Transparency is enabled. When Reduce Transparency is off, the tab bar has a designed opacity treatment using a subtle semi-transparent effect (alpha 0.5), ensuring a visually polished experience while still adapting to system-wide accessibility settings."
+                    )
+                    
+                    featureStatus(
+                        title: "Increase Contrast is",
+                        value: isHighContrast ? "Enabled ✅" : "Disabled ❌"
                     )
                     
                     featureDescription(
                         title: "Increase contrast",
-                        description: "The application listens for the 'Increase Contrast' setting and adjusts the SF Symbol fill colours to be darker if the setting is enabled. This ensures that icons and selected states remain highly visible under different contrast preferences."
+                        description: "By default, when Increase Contrast is enabled in iOS Accessibility settings, iOS enhances the visibility of UI elements by boosting contrast between foreground and background colors, making interface elements more distinct and easier to read. In this implementation, instead of relying solely on iOS’s automatic contrast adjustments, we explicitly define the tab bar icon colors to ensure clear visual distinction. The selected tab icon is dynamically colored—#D24712 in Light Mode and #FF7B22 in Dark Mode—while the unselected icons use a consistent system gray (#999999)."
                     )
+                    
+                    featureStatus(
+                                           title: "Bold Text is",
+                                           value: isBoldText ? "Enabled ✅" : "Disabled ❌"
+                                       )
                     
                     featureDescription(
                         title: "Bold text",
-                        description: "The application listens for the 'Bold text' setting and adjusts the SF Symbol to be embodle if enabled."
+                        description: "By default, when Bold Text is enabled in iOS Accessibility settings, iOS automatically thickens system fonts across the UI to improve legibility, including app labels, buttons, and other text elements. In this implementation, we detect the Bold Text setting and ensure that the UI updates in real time when it is enabled or disabled. The tab bar icons are SF Symbols, which automatically respond to the Bold Text setting by displaying their thicker, high-contrast variants when enabled."
                     )
 
                     
@@ -62,7 +62,7 @@ struct HomeView: View {
                         .foregroundColor(.blue)
                         .padding(.top, 20)
                     
-                    Text("Try enabling 'Reduce Transparency' or 'Increase Contrast' in iOS Settings to see the changes.")
+                    Text("To test, try enabling 'Reduce Transparency', 'Increase Contrast', or 'Bold Text' in iOS Settings to see the changes.")
                         .font(.headline)
                         .foregroundColor(.secondary)
                         .padding(.top, 10)
