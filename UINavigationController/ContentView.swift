@@ -45,12 +45,12 @@ struct HomeView: View {
                     
                     featureDescription(
                         title: "Increase contrast",
-                        description: "The tab bar listens for the 'Increase Contrast' setting and adjusts the SF Symbol fill colours to be darker if the setting is enabled. This ensures that icons and selected states remain highly visible under different contrast preferences."
+                        description: "The application listens for the 'Increase Contrast' setting and adjusts the SF Symbol fill colours to be darker if the setting is enabled. This ensures that icons and selected states remain highly visible under different contrast preferences."
                     )
                     
                     featureDescription(
                         title: "Bold text",
-                        description: "The tab bar listens for the 'Bold text' setting and adjusts the SF Symbol to be embodle if enabled."
+                        description: "The application listens for the 'Bold text' setting and adjusts the SF Symbol to be embodle if enabled."
                     )
 
                     
@@ -203,7 +203,7 @@ struct TabBarController: UIViewControllerRepresentable {
 
         tabBarController.viewControllers = [homeView, musicView, podcastsView]
 
-        // Apply custom tab bar styling
+        // Apply correct styling based on accessibility and appearance settings
         updateTabBarAppearance(tabBarController)
 
         return tabBarController
@@ -215,6 +215,7 @@ struct TabBarController: UIViewControllerRepresentable {
 
     private func updateTabBarAppearance(_ tabBarController: UITabBarController) {
         let isDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
+        let isReduceTransparency = UIAccessibility.isReduceTransparencyEnabled
 
         // Define colors for selected and unselected icons
         let selectedColor = isDarkMode ? UIColor(red: 1.0, green: 0.48, blue: 0.13, alpha: 1.0) : UIColor(red: 0.82, green: 0.28, blue: 0.07, alpha: 1.0) // #FF7B22 (Dark) / #D24712 (Light)
@@ -224,12 +225,12 @@ struct TabBarController: UIViewControllerRepresentable {
         tabBarController.tabBar.tintColor = selectedColor // Selected tab icon color
         tabBarController.tabBar.unselectedItemTintColor = unselectedColor // Unselected icon color
 
-        // Ensure correct background handling
-        let isReduceTransparency = UIAccessibility.isReduceTransparencyEnabled
+        // Ensure a solid block of color when Reduce Transparency is enabled
         if isReduceTransparency {
-            tabBarController.tabBar.backgroundColor = UIColor.white
+            tabBarController.tabBar.backgroundColor = isDarkMode ? UIColor.black : UIColor.white
             tabBarController.tabBar.isTranslucent = false
         } else {
+            // Use dynamic system background (transparent effect in normal mode)
             tabBarController.tabBar.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.5)
             tabBarController.tabBar.isTranslucent = true
         }
